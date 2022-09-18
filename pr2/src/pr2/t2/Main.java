@@ -1,5 +1,6 @@
 package pr2.t2;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Scanner;
 import java.util.concurrent.Callable;
@@ -10,7 +11,7 @@ public class Main {
     private static int MIN_DELAY = 1000;
     private static int MAX_DELAY = 5000;
 
-    public static void main(String[] args) throws ExecutionException, InterruptedException {
+    public static void main(String[] args) throws ExecutionException, InterruptedException, IOException {
         Scanner scanner = new Scanner(System.in);
 
         ArrayList<FutureTask<String>> tasks = new ArrayList<>();
@@ -18,9 +19,9 @@ public class Main {
         while (true) {
             callbackFutureTasksIfDone(tasks);
 
-            if (scanner.hasNext()) {
+            if (System.in.available() != 0 && scanner.hasNextInt()) {
                 int number = scanner.nextInt();
-                FutureTask<String> futureTask = new FutureTask<>(createRunnable(number));
+                FutureTask<String> futureTask = new FutureTask<>(createCallable(number));
 
                 tasks.add(futureTask);
                 new Thread(futureTask).start();
@@ -38,7 +39,7 @@ public class Main {
         }
     }
 
-    private static Callable<String> createRunnable(int number) {
+    private static Callable<String> createCallable(int number) {
         return () -> {
             try {
                 Thread.sleep(generateDelay());

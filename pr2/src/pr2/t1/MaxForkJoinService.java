@@ -4,6 +4,7 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.ForkJoinPool;
 import java.util.concurrent.Future;
 import java.util.concurrent.FutureTask;
 
@@ -21,15 +22,16 @@ public class MaxForkJoinService implements IMaxService{
         ExecutorService executorService = Executors.newWorkStealingPool();
         Future<Long>[] tasks = new Future[countTask];
 
+        ForkJoinPool forkJoinPool = new ForkJoinPool();
+
         int lengthInterval = (int) Math.ceil((float) arr.length / countTask);
 
         for (int i = 0; i < countTask; i++) {
             int startIndex = i * lengthInterval;
             int endIndex = Math.min(arr.length, (i + 1) * lengthInterval);
 
-            tasks[i] = executorService.submit(createTask(arr, startIndex, endIndex));
+            tasks[i] = forkJoinPool.submit(createTask(arr, startIndex, endIndex));
         }
-
         long max = Long.MIN_VALUE;
 
         for (Future<Long> task : tasks) {

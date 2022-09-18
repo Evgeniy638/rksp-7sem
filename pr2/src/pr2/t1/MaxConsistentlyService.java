@@ -16,7 +16,7 @@ public class MaxConsistentlyService implements IMaxService {
                 max = arr[i];
             }
 
-            Thread.sleep(1); // для более явных замеров
+            Thread.sleep(sleepTime); // для более явных замеров
         }
 
         return max;

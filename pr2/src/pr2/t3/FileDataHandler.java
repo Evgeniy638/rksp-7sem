@@ -28,7 +28,7 @@ public class FileDataHandler {
 
     private Runnable createCallable() {
         return () -> {
-            FileData fileData = fileDataGetter.getFileData();
+            FileData fileData = this.getFileData();
 
             try {
                 Thread.sleep((long) fileData.getSize() * this.PERIOD_MULTIPLIER);
@@ -38,5 +38,9 @@ public class FileDataHandler {
 
             System.out.println(fileData);
         };
+    }
+
+    private synchronized FileData getFileData() {
+        return fileDataGetter.getFileData();
     }
 }
