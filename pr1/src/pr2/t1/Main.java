@@ -3,17 +3,18 @@ package pr2.t1;
 import java.util.concurrent.ExecutionException;
 
 public class Main {
-    private static int LENGTH_ARRAY = 10000;
-    private static int MAX_VALUE = 100000;
-    private static int MIN_VALUE = 0;
-    private static int SLEEP_TIME = 1;
+    private static final int LENGTH_ARRAY = 10000;
+    private static final int MAX_VALUE = 100000;
+    private static final int MIN_VALUE = 0;
+    private static final int SLEEP_TIME = 1;
+    private static final int COUNT_TIME = 50;
 
     public static void main(String[] args) throws InterruptedException, ExecutionException {
         long[] arr = generateArray();
 
         IMaxService maxConsistentlyService = new MaxConsistentlyService(SLEEP_TIME);
-        IMaxService maxFutureService = new MaxFutureService(5, SLEEP_TIME);
-        IMaxService maxForkService = new MaxForkJoinService(5, SLEEP_TIME);
+        IMaxService maxFutureService = new MaxFutureService(COUNT_TIME, SLEEP_TIME);
+        IMaxService maxForkService = new MaxForkJoinService(COUNT_TIME, SLEEP_TIME);
 
         timeMaxService(maxConsistentlyService, arr, "последовательной функции F");
         timeMaxService(maxFutureService, arr, "функции F с использованием многопоточности");
