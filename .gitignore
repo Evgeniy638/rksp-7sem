@@ -25,3 +25,7 @@ hs_err_pid*
 #idea
 .idea
 *.iml
+
+#pr2
+file_t2.txt
+file_t2_copy_*.txt
