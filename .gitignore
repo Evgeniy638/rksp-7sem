@@ -29,3 +29,7 @@ hs_err_pid*
 #pr2
 file_t2.txt
 file_t2_copy_*.txt
+
+#pr4
+folder
+shadow_folder
