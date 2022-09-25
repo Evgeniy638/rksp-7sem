@@ -32,7 +32,6 @@ public class Main {
             return getChecksum(byteBuffer);
         } finally {
             if (byteBuffer != null) {
-                System.out.println("close byteBuffer");
                 // В java баг https://bugs.java.com/bugdatabase/view_bug.do?bug_id=4715154
                 // удаляем вручную)
                 Class<?> unsafeClass = null;
