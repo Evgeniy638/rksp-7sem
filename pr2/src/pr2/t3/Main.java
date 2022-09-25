@@ -1,8 +1,5 @@
 package pr2.t3;
 
-import jdk.internal.ref.Cleaner;
-import sun.nio.ch.DirectBuffer;
-
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.lang.reflect.Field;
@@ -35,7 +32,6 @@ public class Main {
             return getChecksum(byteBuffer);
         } finally {
             if (byteBuffer != null) {
-                System.out.println("close byteBuffer");
                 // В java баг https://bugs.java.com/bugdatabase/view_bug.do?bug_id=4715154
                 // удаляем вручную)
                 Class<?> unsafeClass = null;
