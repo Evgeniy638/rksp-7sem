@@ -1,8 +1,5 @@
 package pr2.t3;
 
-import jdk.internal.ref.Cleaner;
-import sun.nio.ch.DirectBuffer;
-
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.lang.reflect.Field;
