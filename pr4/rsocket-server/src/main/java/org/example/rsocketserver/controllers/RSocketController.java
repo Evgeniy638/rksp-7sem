@@ -24,10 +24,6 @@ import java.util.List;
 public class RSocketController {
     private final RSocketService rSocketService;
 
-    public static final String SERVER = "Server";
-    public static final String STREAM = "Stream";
-    public static final String CHANNEL = "Channel";
-
     private final List<RSocketRequester> CLIENTS = new ArrayList<>();
 
     @PreDestroy
