@@ -1,0 +1,27 @@
+version: "3.9"
+services:
+  dbpostgress:
+    image: postgres
+    restart: always
+    volumes: 
+      - ./data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_PASSWORD: password
+      POSTGRES_USER: root
+      POSTGRES_DB: postgres
+      POSTGRES_HOST_AUTH_METHOD: trust
+      POSTGRES_INITDB_ARGS: "--auth-host=scram-sha-256"
+    ports:
+      - 5435:5432
+    expose:
+      - "5435"
+    networks:
+      - postgres
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - 8000:8080
+networks:
+  postgres:
+    external: true
