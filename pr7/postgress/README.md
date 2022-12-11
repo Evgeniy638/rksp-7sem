@@ -1,0 +1,1 @@
+`docker-compose build -t postgres_compose .`
