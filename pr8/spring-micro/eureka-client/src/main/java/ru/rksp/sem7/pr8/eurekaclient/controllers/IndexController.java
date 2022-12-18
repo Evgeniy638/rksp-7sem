@@ -6,11 +6,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 public class IndexController {
-    @Value("eureka.instance.instance-id")
-    private String modulId;
+    @Value("${eureka.instance.instance-id}")
+    private String moduleId;
 
     @GetMapping("/ping")
     public String ping() {
-        return "pong from " + modulId;
+        return "pong from " + moduleId;
     }
 }
