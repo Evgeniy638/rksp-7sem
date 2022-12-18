@@ -9,8 +9,17 @@ public class IndexController {
     @Value("${eureka.instance.instance-id}")
     private String moduleId;
 
+    @Value("${author.name}")
+    private String authorName;
+
     @GetMapping("/ping")
     public String ping() {
         return "pong from " + moduleId;
+    }
+
+
+    @GetMapping("/author")
+    public String getAuthor() {
+        return authorName;
     }
 }
