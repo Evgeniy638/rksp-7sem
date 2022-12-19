@@ -1,0 +1,121 @@
+version: '3'
+
+services:
+  kc_db:
+    container_name: kc_db
+    image: postgres:13.5
+    volumes: 
+      - ./kc_data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_HOST_AUTH_METHOD: trust
+      POSTGRES_USER: my_admin
+      POSTGRES_PASSWORD: my_password
+      POSTGRES_DB: keycloak_db
+    ports:
+      - 5436:5432
+  kc:
+    container_name: kc
+    image: quay.io/keycloak/keycloak:15.0.1
+    environment:
+      DB_VENDOR: POSTGRES
+      DB_ADDR: kc_db
+      DB_DATABASE: keycloak_db
+      DB_USER: my_admin
+      DB_SCHEMA: public
+      DB_PASSWORD: my_password
+      KEYCLOAK_USER: kc_admin
+      KEYCLOAK_PASSWORD: kc_password
+    ports:
+      - 8888:8080
+    depends_on:
+      - kc_db
+  
+  eureka-server:
+    build: ./eureka-server
+    container_name: eureka-server
+    depends_on:
+        - kc
+    ports:
+        - "8081:8081"
+
+  cloud-conifg:
+    build: ./cloud-conifg
+    container_name: cloud-conifg
+    depends_on:
+        - eureka-server
+
+  flight-service:
+    build: ./eureka-client-1
+    container_name: flight-service
+    restart: on-failure
+    ports:
+        - "8091:8091"
+    environment:
+      DB_URL: jdbc:postgresql://db-flight:5432/postgres
+    depends_on:
+        - db-flight
+        - eureka-server
+        - cloud-conifg
+        
+  passenger-service:
+    build: ./euruka-client-2
+    container_name: passenger-service
+    environment:
+      DB_URL: jdbc:postgresql://db-passenger:5432/postgres
+    restart: on-failure
+    ports:
+        - "8092:8092"
+    depends_on:
+        - db-passenger
+        - flight-service
+        - eureka-server
+        - cloud-conifg
+  
+  api-gateway:
+    build: ./api-gateway
+    container_name: gateway
+    restart: on-failure
+    depends_on:
+        - eureka-server
+        - flight-service
+        - passenger-service
+        - cloud-conifg
+    ports: 
+        - "8080:8080"       
+                
+  db-flight:
+    container_name: db-flight
+    image: postgres
+    restart: always
+    volumes: 
+      # - ./init.sql:/docker-entrypoint-initdb.d/10-init.sql
+      - ./data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_PASSWORD: password
+      POSTGRES_USER: root
+      POSTGRES_DB: postgres
+      POSTGRES_HOST_AUTH_METHOD: trust
+      POSTGRES_INITDB_ARGS: "--auth-host=scram-sha-256"
+    ports:
+      - 5435:5432
+    expose:
+      - "5435"
+  
+  db-passenger:
+    container_name: db-passenger
+    image: postgres
+    restart: always
+    volumes: 
+      # - ./init.sql:/docker-entrypoint-initdb.d/10-init.sql
+      - ./data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_PASSWORD: password
+      POSTGRES_USER: root
+      POSTGRES_DB: postgres
+      POSTGRES_HOST_AUTH_METHOD: trust
+      POSTGRES_INITDB_ARGS: "--auth-host=scram-sha-256"
+    ports:
+      - 5434:5432
+    expose:
+      - "5434"
+
