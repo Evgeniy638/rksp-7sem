@@ -45,7 +45,7 @@ services:
         - eureka-server
 
   flight-service:
-    build: ./eureka-client-1
+    build: ./flight-service
     container_name: flight-service
     restart: on-failure
     ports:
@@ -57,14 +57,26 @@ services:
         - eureka-server
         - cloud-conifg
         
-  passenger-service:
-    build: ./euruka-client-2
-    container_name: passenger-service
+  passenger-service-1:
+    build: ./passenger-service
+    container_name: passenger-service-1
     environment:
       DB_URL: jdbc:postgresql://db-passenger:5432/postgres
     restart: on-failure
     ports:
         - "8092:8092"
+    depends_on:
+        - db-passenger
+        - flight-service
+        - eureka-server
+        - cloud-conifg
+
+  passenger-service-2:
+    build: ./passenger-service
+    container_name: passenger-service-2
+    environment:
+      DB_URL: jdbc:postgresql://db-passenger:5432/postgres
+    restart: on-failure
     depends_on:
         - db-passenger
         - flight-service
@@ -78,7 +90,8 @@ services:
     depends_on:
         - eureka-server
         - flight-service
-        - passenger-service
+        - passenger-service-1
+        - passenger-service-2
         - cloud-conifg
     ports: 
         - "8080:8080"       
@@ -88,8 +101,7 @@ services:
     image: postgres
     restart: always
     volumes: 
-      # - ./init.sql:/docker-entrypoint-initdb.d/10-init.sql
-      - ./data:/var/lib/postgresql/data
+      - ./flight_data:/var/lib/postgresql/data
     environment:
       POSTGRES_PASSWORD: password
       POSTGRES_USER: root
@@ -106,8 +118,7 @@ services:
     image: postgres
     restart: always
     volumes: 
-      # - ./init.sql:/docker-entrypoint-initdb.d/10-init.sql
-      - ./data:/var/lib/postgresql/data
+      - ./passenger_data:/var/lib/postgresql/data
     environment:
       POSTGRES_PASSWORD: password
       POSTGRES_USER: root

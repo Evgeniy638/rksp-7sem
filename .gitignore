@@ -39,6 +39,6 @@ pr4/db/data
 pr7/postgress/data
 
 pr8/postgress/data
-pr8/spring-micro/data1
-pr8/spring-micro/data
+pr8/spring-micro/flight_data
+pr8/spring-micro/passenger_data
 pr8/spring-micro/kc_data
